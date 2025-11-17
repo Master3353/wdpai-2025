@@ -1,6 +1,9 @@
 <?php
 
 require_once 'src/controllers/SecurityController.php';
+require_once 'src/controllers/DashboardController.php';
+require_once 'src/ControllerFactory.php';
+
 class Routing
 {
     public static $routes = [
@@ -9,30 +12,38 @@ class Routing
             "action" => "login",
         ],
         "register" => [
-            "controller" => "SecurityController",
+            "controller" => "SecurityController", //register 
             "action" => "register",
         ],
+        "dashboard" => [
+            "controller" => "DashboardController",
+            "action" => "index",
+        ],
     ];
+
     public static function run(string $path)
     {
-        switch ($path) {
-            case "dashboard":
-                //TODO connect with database
-                //get elements to present on dashboard
-                include 'public/views/dashboard.html';
-                break;
-            case "login":
-            case "register":
-                $controller = Routing::$routes[$path]["controller"];
-                $action = Routing::$routes[$path]["action"];
+        // /dashboard/_
+        if (preg_match('#^dashboard/(\d+)$#', $path, $matches)) {
+            $id = (int) $matches[1];
 
-                $controllerObj = new $controller;
-                $controllerObj->$action();
-                break;
-
-            default:
-                include 'public/views/404.html';
-                break;
+            $controllerObj = ControllerFactory::get("DashboardController");
+            $controllerObj->index($id);
+            return;
         }
+
+        // no dashboard
+        if (isset(self::$routes[$path])) {
+
+            $controllerName = self::$routes[$path]["controller"];
+            $action = self::$routes[$path]["action"];
+
+            $controllerObj = ControllerFactory::get($controllerName);
+            $controllerObj->$action(null);
+            return;
+        }
+
+        include 'public/views/404.html';
     }
+
 }

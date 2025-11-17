@@ -6,3 +6,50 @@ body {
 h1 {
     color: blue;
 }
+
+nav>ul {
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav {
+    background-color: chartreuse;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container {
+    background-color: yellowgreen;
+
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+aside {
+    background-color: brown;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    background-color: red;
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    aside {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
